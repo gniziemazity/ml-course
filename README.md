@@ -15,8 +15,9 @@ Command: cd node
 3. Install the package:
 Command: npm install
 
-<font color="orange"> Note, steps 2 and 3 are not needed for lesson 1. </font>
-
+```diff
+! Note, steps 2 and 3 are not needed for lesson 1.
+```
 
 # Tools
 
