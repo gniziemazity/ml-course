@@ -7,7 +7,7 @@ The content is divided by the lessons. You can take the version before a lesson,
 # Installing a package
 
 1. Open the terminal and go to the package you want to use
-For example: cd L2.data_processing_lesson_package
+For example: cd P2.data_processing_lesson
 
 2. Go inside the node directory within that package
 Command: cd node
