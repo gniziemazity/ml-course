@@ -6,17 +6,22 @@ The content is divided by the lessons. You can take the version before a lesson,
 
 # Installing a package
 
-1. Open the terminal and go to the package you want to use
-For example: cd P2.data_processing_lesson
+1. Choose the package you want to use
+For example: P2.data_processing_lesson
 
-2. Go inside the node directory within that package
+2. Add the data next to the other folders
+Data link: https://github.com/gniziemazity/drawing-data
+
+3. Open the terminal inside the package directory
+
+4. Go inside the node directory within that package
 Command: cd node
 
-3. Install the package:
+5. Install the package:
 Command: npm install
 
 ```diff
-! Note, steps 2 and 3 are not needed for lesson 1.
+! Note: these steps are not needed for P1
 ```
 
 # Tools
