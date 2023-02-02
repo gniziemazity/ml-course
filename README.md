@@ -7,7 +7,7 @@ The content is divided by the lessons. You can take the version before a lesson,
 # Installing a package
 
 1. Open the terminal and go to the package you want to use
-For example: cd data_collection_lesson_package
+For example: cd L2.data_processing_lesson_package
 
 2. Go inside the node directory within that package
 Command: cd node
@@ -15,7 +15,7 @@ Command: cd node
 3. Install the package:
 Command: npm install
 
-*Note, steps 2 and 3 are not needed for lesson 1.
+<font color="orange"> Note, steps 2 and 3 are not needed for lesson 1. </font>
 
 
 # Tools
