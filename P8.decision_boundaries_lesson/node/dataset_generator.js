@@ -58,6 +58,7 @@ fs.writeFileSync(constants.SAMPLES,
    JSON.stringify(samples)
 );
 
+fs.mkdirSync(constants.JS_OBJECTS, {recursive: true});
 fs.writeFileSync(constants.SAMPLES_JS,
    "const samples="+JSON.stringify(samples)+";"
 );
