@@ -20,6 +20,7 @@ function createRow(container,studentName,samples){
       sampleContainer.appendChild(sampleLabel);
 
       const img=document.createElement('img');
+      img.setAttribute("loading","lazy");
       img.src=constants.IMG_DIR+'/'+id+'.png';
       img.classList.add("thumb");
       if(utils.flaggedUsers.includes(student_id)){
