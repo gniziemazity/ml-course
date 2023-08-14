@@ -15,6 +15,12 @@ class SketchPad{
       this.undoBtn=document.createElement("button");
       this.undoBtn.innerHTML="UNDO";
       container.appendChild(this.undoBtn);
+      this.saveBtn=document.createElement("button");
+      this.saveBtn.innerHTML="SAVE";
+      container.appendChild(this.saveBtn);
+      this.loadBtn=document.createElement("button");
+      this.loadBtn.innerHTML="LOAD";
+      container.appendChild(this.loadBtn);
 
       this.ctx=this.canvas.getContext("2d");
 
@@ -62,6 +68,34 @@ class SketchPad{
          this.paths.pop();
          this.#redraw();
       }
+      this.saveBtn.onclick=()=>{
+         var filename = "sketch.txt";
+         var text = JSON.stringify(this.paths);
+         var element = document.createElement('a');
+         element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+         element.setAttribute('download', filename);
+         element.click();
+      }
+      this.loadBtn.onclick=()=>{
+         // creating input on-the-fly
+         var sketch = this;
+         var input = document.createElement("input");
+         input.setAttribute('type', 'file');
+         // add onchange handler if you wish to get the file :)
+         input.onchange=()=>{
+            if (input.files[0]) {
+               input.files[0].text()
+               .then(data => {
+                  sketch.paths = JSON.parse(data);
+                  sketch.#redraw();
+               })
+               .catch((error) => {
+                  alert("Unable to load from file: " + input.files[0].name)
+               })
+            }
+         }
+         input.click(); // opening the dialog
+      }
    }
 
    #redraw(){
@@ -70,8 +104,10 @@ class SketchPad{
       draw.paths(this.ctx,this.paths);
       if(this.paths.length>0){
          this.undoBtn.disabled=false;
+         this.saveBtn.disabled=false;
       }else{
          this.undoBtn.disabled=true;
+         this.saveBtn.disabled=true;
       }
       this.triggerUpdate();
    }
