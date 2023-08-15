@@ -48,6 +48,18 @@ button:disabled:hover{
    margin:1px;
    overflow:hidden;
 }
+.statsContainer{
+   flex:1 1 0;
+   text-align:left;
+   padding:5px;
+   font-size:x-small;
+   overflow:hidden;
+}
+.legendContainer{
+   padding:5px 5px 5px 20px;
+   font-size:x-small;
+   overflow:hidden;
+}
 .blur{
    filter:blur(5px);
 }

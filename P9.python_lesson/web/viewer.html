@@ -51,26 +51,99 @@
             const {label}=kNN.predict(testSample.point);
             testSample.label=label;
             testSample.correct=testSample.label==testSample.truth;
+            
+            utils.styles[testSample.label].truePositive = (utils.styles[testSample.label].truePositive || 0) + (testSample.correct?1:0);
+            utils.styles[testSample.label].falsePositive = (utils.styles[testSample.label].falsePositive || 0) + (testSample.correct?0:1);
+            utils.styles[testSample.truth].falseNegative = (utils.styles[testSample.truth].falseNegative || 0) + (testSample.correct?1:0);
+
             totalCount++;
             correctCount+=testSample.correct?1:0;
          }
-         statistics.innerHTML="<b>ACCURACY</b><br>"+
+         for(let s in utils.styles) {
+            utils.styles[s].trueNegative = totalCount - utils.styles[s].truePositive - utils.styles[s].falsePositive - utils.styles[s].falseNegative;
+            utils.styles[s].accuracy = (utils.styles[s].truePositive + utils.styles[s].trueNegative) / totalCount;
+            utils.styles[s].precision = utils.styles[s].truePositive / (utils.styles[s].truePositive + utils.styles[s].falsePositive);
+            utils.styles[s].recall = utils.styles[s].truePositive / (utils.styles[s].truePositive + utils.styles[s].falseNegative);
+            utils.styles[s].f1 = 2 * utils.styles[s].precision * utils.styles[s].recall / (utils.styles[s].precision + utils.styles[s].recall);
+         }
+
+         const trainingGroups=utils.groupBy(trainingSamples,"student_id");
+         const testingGroups=utils.groupBy(testingSamples,"student_id");
+
+         statistics.innerHTML="<b>OVERALL ACCURACY</b><br>"+
             correctCount+"/"+totalCount+" ("+
             utils.formatPercent(correctCount/totalCount)+
             ")";
 
-         const trainingGroups=utils.groupBy(trainingSamples,"student_id");
+         // Metrics Section
+         var subtitle=document.createElement("h2");
+         subtitle.innerHTML="METRICS (" + trainingSamples.length + " samples / " + Object.keys(trainingGroups).length + " sets used as both training and testing)";
+         container.appendChild(subtitle);
+         const row=document.createElement("div");
+         row.classList.add("row");
+         container.appendChild(row);
+      
+         const rowLabel=document.createElement("div");
+         rowLabel.classList.add("rowLabel");
+         const legendTitle=document.createElement("div");
+         legendTitle.innerHTML="<b>Legend:<b>";
+         rowLabel.appendChild(legendTitle);
+
+         const legendContainer = document.createElement("div");
+         legendContainer.classList.add("legendContainer");
+         legendContainer.innerHTML=
+            "TP = True Positive<br>" +
+            "TN = True Negative<br>" +
+            "FP = False Positive<br>" +
+            "FN = False Negative<br>" +
+            "AC = Accuracy<br>" +
+            "PR = Precision<br>" +
+            "RC = Recall<br>" +
+            "F1 = F1 Score";
+         rowLabel.appendChild(legendContainer);
+         row.appendChild(rowLabel);
+      
+         for(let s in utils.styles){
+            if (s == '?') continue;
+
+            const sampleContainer=document.createElement("div");
+            sampleContainer.id="stats_"+s;
+            sampleContainer.classList.add("sampleContainer");
+      
+            const sampleLabel=document.createElement("div");
+            sampleLabel.innerHTML="<b>"+s+"<b>";
+            sampleContainer.appendChild(sampleLabel);
+
+            const statsContainer=document.createElement("div");
+            statsContainer.classList.add("statsContainer");
+            statsContainer.innerHTML=
+               "TP = " + utils.styles[s].truePositive + "<br>" +
+               "TN = " + utils.styles[s].trueNegative + "<br>" +
+               "FP = " + utils.styles[s].falsePositive + "<br>" +
+               "FN = " + utils.styles[s].falseNegative + "<br>" +
+               "AC = " + utils.formatPercent(utils.styles[s].accuracy) + "<br>" +
+               "PR = " + utils.formatPercent(utils.styles[s].precision) + "<br>" +
+               "RC = " + utils.formatPercent(utils.styles[s].recall) + "<br>" +
+               "F1 = " + utils.formatPercent(utils.styles[s].f1);
+            sampleContainer.appendChild(statsContainer);
+
+            row.appendChild(sampleContainer);
+         }
+         
+         // Training Section
+         subtitle=document.createElement("h2");
+         subtitle.innerHTML="TRAINING (" + Object.keys(trainingGroups).length + " sets)";
+         container.appendChild(subtitle);
          for(let student_id in trainingGroups){
             const samples=trainingGroups[student_id];
             const studentName=samples[0].student_name;
             createRow(container,studentName,samples);
          }
 
-         const subtitle=document.createElement("h2");
-         subtitle.innerHTML="TESTING";
+         // Testing Section
+         subtitle=document.createElement("h2");
+         subtitle.innerHTML="TESTING (" + Object.keys(testingGroups).length + " sets)";
          container.appendChild(subtitle);
-
-         const testingGroups=utils.groupBy(testingSamples,"student_id");
          for(let student_id in testingGroups){
             const samples=testingGroups[student_id];
             const studentName=samples[0].student_name;
